@@ -28,7 +28,10 @@ spec:
           name: hlf-crypto  
       - name: connection
         configMap:
-          name: hlf-connection  
+          name: hlf-connection
+      - name: blockchainexplorer
+        configMap:
+          name: hlf-blockchainexplorer
       containers:
       - name: explorer
         image: hyperledger/explorer:latest
@@ -51,6 +54,8 @@ spec:
           name: data
         - mountPath: /explorer/src/scripts
           name: config
+        - mountPath: /explorer/src/blockchain-explorer
+          name: blockchainexplorer
         - mountPath: /opt/explorer/app/platform/fabric/config.json
           name: config
           subPath: config.json
