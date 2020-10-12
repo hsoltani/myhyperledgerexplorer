@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: explorerdb.mynetwork.com
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorerdb.mynetwork.com
+      
+  template:
+    metadata:
+      labels:
+        app: explorerdb.mynetwork.com
+        
+    spec:
+      networks:
+        mynetwork.com:
+          external:
+            name: net_byfn
+      volumes:
+      - name: pgdata
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: hlf-scripts
+          
+      containers:
+      - name: postgres
+        image: hyperledger/explorer-db:latest
+        
+        
+        hostname: explorerdb.mynetwork.com
+        env:
+          - name: DATABASE_DATABASE
+            value: fabricexplorer
+          - name: DATABASE_USERNAME
+            value: hppoc
+          - name: DATABASE_PASSWD
+            value: password
+        
+  
+          
+        volumeMounts:
+        - name: config
+          mountPath: /docker-entrypoint-initdb.d/createdb.sh
+          subPath: createdb.sh
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data
+         
+        ports:
+        - name: http
+          containerPort: 5432
+          protocol: TCP
+      
+     
