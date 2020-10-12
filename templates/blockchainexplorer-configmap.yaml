@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hlf-blockchainexplorer
+  labels:
+data:
+  {{- (.Files.Glob "blockchain-explorer/*").AsConfig | nindent 2 }}
